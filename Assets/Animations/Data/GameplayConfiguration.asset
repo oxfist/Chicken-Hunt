@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf5d674ab7cc83b41b494bc1a50e2350, type: 3}
+  m_Name: GameplayConfiguration
+  m_EditorClassIdentifier: 
+  bulletSpeed: 3
+  enemySpeed: 2
+  playerSpeed: 10
+  cameraSmoothSpeed: 0.05
+  cameraOffsetTimer: 1.5
+  initialHP: 10
+  bulletDamage: 1
+  playerIFrames: 60
