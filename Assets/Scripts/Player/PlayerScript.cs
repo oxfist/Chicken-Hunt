@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerScript : MonoBehaviour {
@@ -8,10 +7,10 @@ public class PlayerScript : MonoBehaviour {
     public GameplayConfiguration gameplayConfig;
     public LayerMask whatIsGround;
     public Transform groundCheck;
-    public float jumpForce = 350f;
 
     public static bool alive = true;
 
+    private JumpScript jumpScript;
     private Animator anim;
     private Rigidbody2D rb2d;
     private bool grounded = false;
@@ -25,7 +24,8 @@ public class PlayerScript : MonoBehaviour {
 
     private void Start() {
         anim = GetComponent<Animator>();
-        rb2d = GetComponent<Rigidbody2D>(); 
+        rb2d = GetComponent<Rigidbody2D>();
+        jumpScript = GetComponent<JumpScript>();
 	}
 
 	private void Update() {
@@ -52,7 +52,7 @@ public class PlayerScript : MonoBehaviour {
             anim.SetFloat("fVSpeed", rb2d.velocity.y);
 
             if (grounded && Input.GetButtonDown("Jump") && !Crouching())
-                Jump();
+                jumpScript.Jump();
             if (Input.GetAxisRaw("Horizontal") == 0)
                 anim.SetBool("bRunning", false);
             if (!Crouching() && Input.GetAxisRaw("Horizontal") != 0)
@@ -77,11 +77,6 @@ public class PlayerScript : MonoBehaviour {
         Vector3 newScale = transform.localScale;
         newScale.x *= -1;
         transform.localScale = newScale;
-    }
-
-    private void Jump() {
-        anim.SetBool("bGround", false);
-        rb2d.AddForce(new Vector2(0, jumpForce));
     }
 
     private void Crouch() {
@@ -137,5 +132,10 @@ public class PlayerScript : MonoBehaviour {
         anim.SetBool("bAlive", false);
         gameOverCanvas.SetActive(true);
         scoreHPCanvas.SetActive(false);
+    }
+
+    private void OnDrawGizmos() {
+        Gizmos.color = Color.red;
+        Gizmos.DrawSphere(groundCheck.position, groundRadius);
     }
 }
