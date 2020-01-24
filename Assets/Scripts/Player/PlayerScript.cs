@@ -8,6 +8,7 @@ public class PlayerScript : MonoBehaviour {
     public LayerMask whatIsGround;
     public Transform groundCheck;
 
+
     public static bool alive = true;
 
     private JumpScript jumpScript;
