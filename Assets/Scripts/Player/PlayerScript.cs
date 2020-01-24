@@ -11,20 +11,20 @@ public class PlayerScript : MonoBehaviour {
     public static bool alive = true;
 
     private JumpScript jumpScript;
-    private Animator anim;
-    private Rigidbody2D rb2d;
+    private Animator animator;
+    private Rigidbody2D body;
     private bool grounded = false;
     private bool facingRight = true;
     private bool invulnerable = false;
     private readonly float groundRadius = 0.1f;
 
     public bool Crouching() {
-        return anim.GetBool("bCrouching");
+        return animator.GetBool("bCrouching");
     }
 
     private void Start() {
-        anim = GetComponent<Animator>();
-        rb2d = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
+        body = GetComponent<Rigidbody2D>();
         jumpScript = GetComponent<JumpScript>();
 	}
 
@@ -46,30 +46,63 @@ public class PlayerScript : MonoBehaviour {
         if (alive && !GameManager.instance.LevelCompleted) {
             grounded = Physics2D.OverlapCircle(groundCheck.position,
                                                groundRadius, whatIsGround);
-            anim.SetBool("bGround", grounded);
-            anim.SetFloat("fVSpeed", rb2d.velocity.y);
+            animator.SetBool("bGround", grounded);
+            animator.SetFloat("fVSpeed", body.velocity.y);
 
-            if (grounded && Input.GetButtonDown("Jump") && !Crouching())
-                jumpScript.Jump();
-            if (Input.GetAxisRaw("Horizontal") == 0)
-                anim.SetBool("bRunning", false);
-            if (!Crouching() && Input.GetAxisRaw("Horizontal") != 0)
-                anim.SetBool("bRunning", true);
+            if (JumpOnGroundNotCrouching())
+                Jump();
+            if (NotMoving())
+                StopRunningAnimation();
+            if (RunningNotCrouching())
+                StartRunningAnimation();
 
             // Set velocity to zero when crouching so the player doesn't slide.
             if (Crouching())
-                rb2d.velocity = Vector2.zero;
+                body.velocity = StopVelocity();
 
             // Move the player.
-            if (!Crouching())
-                rb2d.velocity = new Vector2(Input.GetAxis("Horizontal") * gameplayConfig.playerSpeed, rb2d.velocity.y);
+            if (!Crouching()) {
+                body.velocity = MoveVelocity(body.velocity);
+            }
 
             CheckFacingDirection();
         }
 
         if (GameManager.instance.LevelCompleted) {
-            rb2d.velocity = Vector2.zero;
+            body.velocity = StopVelocity();
         }
+    }
+
+    private Vector2 MoveVelocity(Vector2 currentVelocity) {
+        return new Vector2(Input.GetAxis("Horizontal") * gameplayConfig.playerSpeed, currentVelocity.y);
+    }
+
+    private Vector2 StopVelocity() {
+        return Vector2.zero;
+    }
+
+    private void StopRunningAnimation() {
+        animator.SetBool("bRunning", false);
+    }
+
+    private void StartRunningAnimation() {
+        animator.SetBool("bRunning", true);
+    }
+
+    private void Jump() {
+        jumpScript.Jump();
+    }
+
+    private bool RunningNotCrouching() {
+        return !Crouching() && Input.GetAxisRaw("Horizontal") != 0;
+    }
+
+    private bool NotMoving() {
+        return Input.GetAxisRaw("Horizontal") == 0;
+    }
+
+    private bool JumpOnGroundNotCrouching() {
+        return grounded && Input.GetButtonDown("Jump") && !Crouching();
     }
 
     private void Flip() {
@@ -80,11 +113,11 @@ public class PlayerScript : MonoBehaviour {
     }
 
     private void Crouch() {
-        anim.SetBool("bCrouching", true);
+        animator.SetBool("bCrouching", true);
     }
 
     private void StandUp() {
-        anim.SetBool("bCrouching", false);
+        animator.SetBool("bCrouching", false);
     }
 
     private void CheckFacingDirection() {
@@ -101,11 +134,11 @@ public class PlayerScript : MonoBehaviour {
         if (alive && !invulnerable) {
             if (otherCollider.tag == "Enemy") {
                 ScoreManager.instance.HP -= EnemyScript.Damage;
-                anim.SetTrigger("tDamage");
+                animator.SetTrigger("tDamage");
                 TriggerIFrames(gameplayConfig.playerIFrames);
             } else if (otherCollider.tag == "Bullet") {
                 ScoreManager.instance.HP -= gameplayConfig.bulletDamage;
-                anim.SetTrigger("tDamage");
+                animator.SetTrigger("tDamage");
                 // Afte player is hit, activate iFrames;
                 TriggerIFrames(gameplayConfig.playerIFrames);
             }
@@ -127,9 +160,9 @@ public class PlayerScript : MonoBehaviour {
 
     private void Die() {
         alive = false;
-        rb2d.velocity = Vector2.zero;
+        body.velocity = Vector2.zero;
         GetComponentInChildren<CapsuleCollider2D>().enabled = false;
-        anim.SetBool("bAlive", false);
+        animator.SetBool("bAlive", false);
         gameOverCanvas.SetActive(true);
         scoreHPCanvas.SetActive(false);
     }
