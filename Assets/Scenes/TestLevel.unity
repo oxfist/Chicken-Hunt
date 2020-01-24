@@ -1730,7 +1730,7 @@ Prefab:
     - target: {fileID: 114628855113974606, guid: d6136ba49ecd4ac49be78a4826fea5d8,
         type: 2}
       propertyPath: timeToReachHeight
-      value: 0.6
+      value: 0.8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d6136ba49ecd4ac49be78a4826fea5d8, type: 2}

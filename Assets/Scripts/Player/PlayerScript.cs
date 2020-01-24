@@ -42,9 +42,7 @@ public class PlayerScript : MonoBehaviour {
             if (transform.position.x >= 118)
                 GameManager.instance.LevelCompleted = true;
         }
-    }
 
-    private void FixedUpdate() {
         if (alive && !GameManager.instance.LevelCompleted) {
             grounded = Physics2D.OverlapCircle(groundCheck.position,
                                                groundRadius, whatIsGround);
@@ -68,8 +66,10 @@ public class PlayerScript : MonoBehaviour {
 
             CheckFacingDirection();
         }
-        if (GameManager.instance.LevelCompleted)
+
+        if (GameManager.instance.LevelCompleted) {
             rb2d.velocity = Vector2.zero;
+        }
     }
 
     private void Flip() {
