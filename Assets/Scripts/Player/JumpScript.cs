@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 
 public class JumpScript : MonoBehaviour {
-    [Range(1, 10)]
-    public float jumpVelocity;
+    [Range(0, 1)]
+    [Tooltip("Time in seconds to reach maximum jump height")]
+    public float timeToReachHeight;
 
     private Animator animator;
     private Rigidbody2D body;
@@ -14,6 +15,10 @@ public class JumpScript : MonoBehaviour {
 
     public void Jump() {
         animator.SetBool("bGround", false);
-        body.velocity = Vector2.up * jumpVelocity;
+        body.velocity = Vector2.up * GetJumpVelocity(timeToReachHeight, Physics.gravity.y);
+    }
+
+    private float GetJumpVelocity(float timeToReachHeight, float gravity) {
+        return -(timeToReachHeight * gravity);
     }
 }
