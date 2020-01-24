@@ -1730,8 +1730,18 @@ Prefab:
     - target: {fileID: 114628855113974606, guid: d6136ba49ecd4ac49be78a4826fea5d8,
         type: 2}
       propertyPath: timeToReachHeight
-      value: 0.6
+      value: 0.75
       objectReference: {fileID: 0}
+    - target: {fileID: 114556237358968692, guid: d6136ba49ecd4ac49be78a4826fea5d8,
+        type: 2}
+      propertyPath: gameOverCanvas
+      value: 
+      objectReference: {fileID: 1746963157}
+    - target: {fileID: 114556237358968692, guid: d6136ba49ecd4ac49be78a4826fea5d8,
+        type: 2}
+      propertyPath: scoreHPCanvas
+      value: 
+      objectReference: {fileID: 202389062}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d6136ba49ecd4ac49be78a4826fea5d8, type: 2}
   m_IsPrefabParent: 0

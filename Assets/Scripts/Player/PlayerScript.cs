@@ -172,7 +172,7 @@ public class PlayerScript : MonoBehaviour {
     private void Die() {
         alive = false;
         body.velocity = Vector2.zero;
-        GetComponentInChildren<CapsuleCollider2D>().enabled = false;
+        GetComponentInChildren<CircleCollider2D>().enabled = false;
         animator.SetBool("bAlive", false);
         gameOverCanvas.SetActive(true);
         scoreHPCanvas.SetActive(false);
