@@ -30,35 +30,45 @@ public class PlayerScript : MonoBehaviour {
 
 	private void Update() {
         if (alive && !GameManager.instance.LevelCompleted) {
-            if (ScoreManager.instance.HP <= 0 || transform.position.y < -10)
+            if (ScoreManager.instance.HP <= 0 || transform.position.y < -10) {
                 Die();
-            if (grounded && Input.GetAxisRaw("Vertical") < 0f)
+            }
+
+            if (grounded && Input.GetAxisRaw("Vertical") < 0f) {
                 Crouch();
-            if (Crouching() && Input.GetAxisRaw("Vertical") > -1f)
+            }
+
+            if (Crouching() && Input.GetAxisRaw("Vertical") > -1f) {
                 StandUp();
+            }
 
             // If player goes out of screen at the right side of the level,
             // the level is completed.
-            if (transform.position.x >= 118)
+            if (transform.position.x >= 118) {
                 GameManager.instance.LevelCompleted = true;
-        }
+            }
 
-        if (alive && !GameManager.instance.LevelCompleted) {
             grounded = Physics2D.OverlapCircle(groundCheck.position,
                                                groundRadius, whatIsGround);
             animator.SetBool("bGround", grounded);
             animator.SetFloat("fVSpeed", body.velocity.y);
 
-            if (JumpOnGroundNotCrouching())
+            if (JumpOnGroundNotCrouching()) {
                 Jump();
-            if (NotMoving())
+            }
+
+            if (NotMoving()) {
                 StopRunningAnimation();
-            if (RunningNotCrouching())
+            }
+
+            if (RunningNotCrouching()) {
                 StartRunningAnimation();
+            }
 
             // Set velocity to zero when crouching so the player doesn't slide.
-            if (Crouching())
+            if (Crouching()) {
                 body.velocity = StopVelocity();
+            }
 
             // Move the player.
             if (!Crouching()) {
