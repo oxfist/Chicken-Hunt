@@ -1,22 +1,19 @@
 ﻿using UnityEngine;
 
 public class JumpScript : MonoBehaviour {
+    [Tooltip("Maximum jump height in arbitrary unit")]
+    public float maxJumpHeight;
+
     [Range(0, 1)]
     [Tooltip("Time in seconds to reach maximum jump height")]
     public float timeToReachHeight;
 
-    [Range(1, 5)]
-    [Tooltip("Accelerator for max height jump")]
-    public float fallAccelerator = 3f;
-
-    [Range(1, 5)]
-    [Tooltip("Accelerator for non-max height jump")]
-    public float lowJumpAccelerator = 2f;
-
     private Animator animator;
     private Rigidbody2D body;
+    private float jumpingGravity;
 
 	private void Start() {
+        jumpingGravity = GetJumpingGravity(maxJumpHeight, timeToReachHeight);
         animator = GetComponent<Animator>();
         body = GetComponent<Rigidbody2D>();
 	}
@@ -42,19 +39,23 @@ public class JumpScript : MonoBehaviour {
     }
 
     private Vector2 LowFallingVelocity() {
-        return Vector2.up * Physics2D.gravity.y * (lowJumpAccelerator - 1) * Time.deltaTime;
+        return Vector2.up * (jumpingGravity + 1) * Time.deltaTime;
     }
 
     private Vector2 FallingVelocity() {
-        return Vector2.up * Physics2D.gravity.y * (fallAccelerator - 1) * Time.deltaTime;
+        return Vector2.up * jumpingGravity * Time.deltaTime;
     }
 
     public void Jump() {
         animator.SetBool("bGround", false);
-        body.velocity = Vector2.up * GetJumpVelocity(timeToReachHeight, Physics.gravity.y);
+        body.velocity = Vector2.up * GetJumpVelocity(maxJumpHeight, timeToReachHeight);
     }
 
-    private float GetJumpVelocity(float timeToReachHeight, float gravity) {
-        return -(timeToReachHeight * gravity);
+    private float GetJumpingGravity(float maxJumpHeight, float timeToReachHeight) {
+        return (-2 * maxJumpHeight) / Mathf.Pow(timeToReachHeight, 2);
+    }
+
+    private float GetJumpVelocity(float maxJumpHeight, float timeToReachHeight) {
+        return (2 * maxJumpHeight) / timeToReachHeight;
     }
 }
