@@ -5,6 +5,7 @@ using UnityEngine;
 public class BulletScript : MonoBehaviour {
     public GameplayConfiguration gameplayConfig;
     public GameObject Shooter { get; set; }
+    public Color TrajectoryColor { get; set; }
 
     private GameObject player;
     private Vector3 initialPosition;
@@ -35,7 +36,7 @@ public class BulletScript : MonoBehaviour {
     }
 
     private void OnDrawGizmos() {
-        Gizmos.color = Color.red;
+        Gizmos.color = TrajectoryColor;
         Gizmos.DrawLine(transform.position, targetPosition);
     }
 }

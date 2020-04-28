@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class WitchScript : MonoBehaviour {
     public GameObject bulletPrefab;
+    public Color projectileTrajectoryColor = Color.red;
 
     private new Renderer renderer;
     private bool ready = true;
@@ -18,15 +19,16 @@ public class WitchScript : MonoBehaviour {
             // bullet.
             if (renderer.isVisible && ready) {
                 ready = false;
-                Shoot();
+                Shoot(projectileTrajectoryColor);
             }
         }
 	}
 
-    private void Shoot() {
+    private void Shoot(Color trajectoryColor) {
         if (bulletPrefab) {
             GameObject bullet = Instantiate(bulletPrefab) as GameObject;
             bullet.transform.position = transform.position;
+            bullet.GetComponent<BulletScript>().TrajectoryColor = trajectoryColor;
             bullet.GetComponent<BulletScript>().Shooter = gameObject;
         }
     }
